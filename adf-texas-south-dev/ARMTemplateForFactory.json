@@ -1,0 +1,306 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-texas-south-dev"
+		},
+		"ADLS1_DEV_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLS1_DEV'"
+		},
+		"ADLS2_DEV_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLS2_DEV'"
+		},
+		"ADLS1_DEV_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://storagedevgit.dfs.core.windows.net/"
+		},
+		"ADLS2_DEV_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://storagetestingrgit.dfs.core.windows.net/"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFileName": ".json",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Json1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Json2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Json1')]",
+				"[concat(variables('factoryId'), '/datasets/Json2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Json1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS1_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "mysourcefile1"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string"
+						},
+						"etag": {
+							"type": "string"
+						},
+						"nextPageToken": {
+							"type": "string"
+						},
+						"regionCode": {
+							"type": "string"
+						},
+						"pageInfo": {
+							"type": "object",
+							"properties": {
+								"totalResults": {
+									"type": "integer"
+								},
+								"resultsPerPage": {
+									"type": "integer"
+								}
+							}
+						},
+						"items": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"kind": {
+										"type": "string"
+									},
+									"etag": {
+										"type": "string"
+									},
+									"id": {
+										"type": "object",
+										"properties": {
+											"kind": {
+												"type": "string"
+											},
+											"videoId": {
+												"type": "string"
+											}
+										}
+									},
+									"snippet": {
+										"type": "object",
+										"properties": {
+											"publishedAt": {
+												"type": "string"
+											},
+											"channelId": {
+												"type": "string"
+											},
+											"title": {
+												"type": "string"
+											},
+											"description": {
+												"type": "string"
+											},
+											"thumbnails": {
+												"type": "object",
+												"properties": {
+													"default": {
+														"type": "object",
+														"properties": {
+															"url": {
+																"type": "string"
+															},
+															"width": {
+																"type": "integer"
+															},
+															"height": {
+																"type": "integer"
+															}
+														}
+													},
+													"medium": {
+														"type": "object",
+														"properties": {
+															"url": {
+																"type": "string"
+															},
+															"width": {
+																"type": "integer"
+															},
+															"height": {
+																"type": "integer"
+															}
+														}
+													},
+													"high": {
+														"type": "object",
+														"properties": {
+															"url": {
+																"type": "string"
+															},
+															"width": {
+																"type": "integer"
+															},
+															"height": {
+																"type": "integer"
+															}
+														}
+													}
+												}
+											},
+											"channelTitle": {
+												"type": "string"
+											},
+											"liveBroadcastContent": {
+												"type": "string"
+											},
+											"publishTime": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS1_DEV')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Json2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS2_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "mysourcefile2"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS2_DEV')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLS1_DEV')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ADLS1_DEV_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ADLS1_DEV_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLS2_DEV')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ADLS2_DEV_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ADLS2_DEV_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

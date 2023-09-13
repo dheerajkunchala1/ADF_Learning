@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-texas-south-dev"
+		},
+		"ADLS1_DEV_accountKey": {
+			"value": ""
+		},
+		"ADLS2_DEV_accountKey": {
+			"value": ""
+		},
+		"ADLS1_DEV_properties_typeProperties_url": {
+			"value": "https://storagedevgit.dfs.core.windows.net/"
+		},
+		"ADLS2_DEV_properties_typeProperties_url": {
+			"value": "https://storagetestingrgit.dfs.core.windows.net/"
+		}
+	}
+}
