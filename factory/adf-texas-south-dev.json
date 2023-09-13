@@ -1,0 +1,9 @@
+{
+	"name": "adf-texas-south-dev",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "646e1e1a-bc44-4ef3-a615-0c2f45db20ff",
+		"tenantId": "6f54ced7-7ac8-4cb7-9760-955bdb77b9d3"
+	}
+}
