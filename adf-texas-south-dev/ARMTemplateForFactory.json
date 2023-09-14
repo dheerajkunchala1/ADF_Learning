@@ -52,7 +52,6 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
-									"wildcardFileName": ".json",
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -111,6 +110,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"fileName": "sampleVideos.json",
 						"fileSystem": "mysourcefile1"
 					}
 				},
